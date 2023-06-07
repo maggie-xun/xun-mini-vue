@@ -42,6 +42,7 @@ function clearnupEffect(effect) {
 const targetMap = new Map()
 
 export function track(target, key) {
+  console.log(target, 666)
   if (!isTracking) return
 
   let depsMap = targetMap.get(target)
@@ -55,21 +56,32 @@ export function track(target, key) {
 
     depsMap.set(key, dep)
   }
+  if (!activeEffect) return
+  if(!shouldTrack) return
 
-  if (dep.has(activeEffect)) return
+  // if (!dep.has(activeEffect)) {
+  //   return
+  // }
 
-  dep.add(activeEffect)
-  activeEffect.deps.push(dep)
+  trackEffects(dep)
   // dep.set(target)=
 }
 
-function isTracking() {
+export function trackEffects(dep) {
+  dep.add(activeEffect)
+  activeEffect.deps.push(dep)
+}
+
+export function isTracking() {
   return shouldTrack && activeEffect !== undefined
 }
 export function trigger(target, key) {
   let depsMap = targetMap.get(target)
   let dep = depsMap.get(key)
+  triggerEffects(dep)
+}
 
+export function triggerEffects(dep) {
   for (const effect of dep) {
     if (effect.scheduler) {
       effect.scheduler()
@@ -78,7 +90,6 @@ export function trigger(target, key) {
     }
   }
 }
-
 export function effect(fn, options = {}) {
   const _effect = new ReactiveEffect(fn)
 
