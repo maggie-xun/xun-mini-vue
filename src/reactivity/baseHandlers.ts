@@ -40,12 +40,12 @@ export const mutableHandler = {
 }
 
 export const readonlyHandler = {
-  get:readonlyGet,
+  get: readonlyGet,
   set() {
     console.warn('set失败')
     return true
   }
 }
-// export const shallowReadonlyHandler = extend({}, readonlyHandler, {
-//   get: shallowReadonlyGet
-// })
+export const shallowReadonlyHandler = extend({}, readonlyHandler, {
+  get: shallowReadonlyGet
+})
