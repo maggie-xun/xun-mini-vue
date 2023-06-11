@@ -1,5 +1,6 @@
 import typescript from 'rollup-plugin-typescript'
-import pkg from './package.json'
+import pkg from './package.json' assert { type: 'json', integrity: 'sha384-ABC123' }
+
 export default {
   input: './src/index.ts',
   output: [
