@@ -8,11 +8,13 @@ export function render(vnode, container) {
 }
 
 function patch(vnode, container) {
-// ShapeFlags
-  const {shapeFlags}= vnode
-  if (shapeFlags&ShapeFlags.ELEMNT) {// 处理element
+  // ShapeFlags
+  const { shapeFlags } = vnode
+  if (shapeFlags & ShapeFlags.ELEMNT) {
+    // 处理element
     processElement(vnode, container)
-  } else if (shapeFlags&ShapeFlags.STATEFUL_COMPONENT) {// 处理组件
+  } else if (shapeFlags & ShapeFlags.STATEFUL_COMPONENT) {
+    // 处理组件
     processComponent(vnode, container)
   }
 }
@@ -23,17 +25,16 @@ function processComponent(vnode: any, container: any) {
 function mountComponent(initialVnode: any, container) {
   const instance = createComponentInstance(initialVnode)
   setupComponent(instance)
-  setupRenderEffect(instance,initialVnode, container)
+  setupRenderEffect(instance, initialVnode, container)
 }
 
-function setupRenderEffect(instance: any,initialVnode, container) {
+function setupRenderEffect(instance: any, initialVnode, container) {
   const { proxy } = instance
 
   const subTree = instance.render.call(proxy)
   patch(subTree, container)
   initialVnode.el = subTree.el
 }
-
 
 function processElement(vnode: any, container: any) {
   mountElement(vnode, container)
@@ -45,13 +46,18 @@ function mountElement(vnode: any, container: any) {
   //handle props
   for (const key in props) {
     const val = props[key]
-    el.setAttribute(key, val)
+    const isOn=(key:string)=>/^on[A-Z]/.test(key)
+    if (isOn(key)) {
+      el.addEventListener(key.slice(2).toLowerCase(), val)
+    } else {
+      el.setAttribute(key, val)
+    }
   }
 
   //handle children
-  if (shapeFlags&ShapeFlags.TEXT_CHILDREN) {
+  if (shapeFlags & ShapeFlags.TEXT_CHILDREN) {
     el.textContent = children
-  } else if (shapeFlags&ShapeFlags.ARRAY_CHILDREN) {
+  } else if (shapeFlags & ShapeFlags.ARRAY_CHILDREN) {
     mountChildren(vnode, el)
   }
 
