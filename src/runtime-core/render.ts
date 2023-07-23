@@ -10,7 +10,7 @@ export function render(vnode, container) {
 function patch(vnode, container) {
   // ShapeFlags
   const { shapeFlags } = vnode
-  if (shapeFlags & ShapeFlags.ELEMNT) {
+  if (shapeFlags & ShapeFlags.ELEMENT) {
     // 处理element
     processElement(vnode, container)
   } else if (shapeFlags & ShapeFlags.STATEFUL_COMPONENT) {
