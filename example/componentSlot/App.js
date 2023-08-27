@@ -1,4 +1,5 @@
-import { h } from "../../lib/guide-mini-vue.esm.js";
+
+import { h, createTextVNode } from "../../lib/guide-mini-vue.esm.js";
 import { Foo } from "./Foo.js";
 
 export const App = {
@@ -9,7 +10,10 @@ export const App = {
       Foo,
       {},
       {
-        header: ({age}) => h("p", {}, "123" + age),
+        header: ({ age }) => [
+          h("p", {}, "123" + age),
+          createTextVNode("你好呀"),
+        ],
         footer: () => h("p", {}, "456"),
       }
     );

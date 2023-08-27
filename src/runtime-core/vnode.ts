@@ -1,5 +1,8 @@
 import { ShapeFlags } from "../shared/ShapeFlags";
 
+export const Fragment = Symbol("Fragment");
+export const Text = Symbol("Text");
+
 export function createVNode(type, props?, children?) {
   const vnode = {
     type,
@@ -11,18 +14,11 @@ export function createVNode(type, props?, children?) {
 
   //children
   if (typeof children == "string") {
-    vnode.shapeFlags |=  ShapeFlags.TEXT_CHILDREN;
+    vnode.shapeFlags |= ShapeFlags.TEXT_CHILDREN;
   } else if (Array.isArray(children)) {
     vnode.shapeFlags |= ShapeFlags.ARRAY_CHILDREN;
   }
 
-  //   if (
-  //     vnode.shapeFlags &
-  //     ShapeFlags.STATEFUL_COMPONENT &&
-  //     typeof  children === "object"
-  //   ) {
-  //     vnode.shapeFlags |=  ShapeFlags.SLOT_CHILDREN;
-  //   }
   if (typeof children === "object") {
     // 暂时主要是为了标识出 slots_children 这个类型来
     // 暂时我们只有 element 类型和 component 类型的组件
@@ -34,9 +30,13 @@ export function createVNode(type, props?, children?) {
       vnode.shapeFlags |= ShapeFlags.SLOTS_CHILDREN;
     }
   }
+
   return vnode;
 }
 
+export function createTextVNode(text: string) {
+  return createVNode(Text, {}, text);
+}
 function getShapeFlags(type) {
   return typeof type === "string"
     ? ShapeFlags.ELEMENT
