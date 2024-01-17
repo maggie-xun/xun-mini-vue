@@ -6,6 +6,7 @@ class RefImpl {
   public dep
   private _rawValue: any
   public __v_isRef = true
+  
   constructor(value) {
     this._rawValue = value
     console.log(value, isObject(value))
